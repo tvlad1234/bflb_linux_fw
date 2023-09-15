@@ -35,6 +35,7 @@ int main(void)
 {
     board_init();
 
+#if 0
     LOG_I("Starting Mailbox Handlers\r\n");
 
     if (oblfr_mailbox_init() != OBLFR_OK) {
@@ -49,4 +50,8 @@ int main(void)
         oblfr_mailbox_dump();
         bflb_mtimer_delay_ms(5000);
     }
+#else
+    while (1) {
+    }
+#endif
 }

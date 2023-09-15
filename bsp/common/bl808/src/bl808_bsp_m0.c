@@ -210,18 +210,24 @@ void bl808_cpu_init(void)
     // // /* D0 image offset on flash is 0x100000+0x1000(header) */
     bflb_sf_ctrl_set_flash_image_offset(CONFIG_D0_FLASH_ADDR + 0x1000, 1, SF_CTRL_FLASH_BANK0);
 
+#if 0
     Tzc_Sec_Set_CPU_Group(GLB_CORE_ID_LP, 2);
     // /* LP boot from 0x58020000 */
     GLB_Set_CPU_Reset_Address(GLB_CORE_ID_LP, 0x58020000);
     // /* LP image offset on flash is CONFIG_LP_FLASH_ADDR+0x1000(header) */
     bflb_sf_ctrl_set_flash_image_offset(CONFIG_LP_FLASH_ADDR + 0x1000, 2, SF_CTRL_FLASH_BANK1);
+#endif
 
 
     bflb_irq_restore(flag);
 
     /* we do not check header at 0x100000, just boot */
     GLB_Release_CPU(GLB_CORE_ID_D0);
+#if 0
     GLB_Release_CPU(GLB_CORE_ID_LP);
+#endif
+
+    bl_save_flash_info();
 
     /* release d0 and then do can run */
     BL_WR_WORD(IPC_SYNC_ADDR1, IPC_SYNC_FLAG);

@@ -11,6 +11,7 @@
 #include "mem.h"
 #include "log.h"
 #include "bl808_bsp_common.h"
+#include <bl808_glb_gpio.h>
 
 
 #ifdef CONFIG_BSP_SDH_SDCARD
@@ -18,11 +19,35 @@
 #endif
 
 
+static void init_jtag_gpio()
+{
+    GLB_GPIO_Cfg_Type gpio_init;
+
+    /* Enable C906 JTAG */
+    gpio_init.gpioFun = 27; // C906 JTAG
+    gpio_init.gpioMode = GPIO_MODE_AF;
+    gpio_init.pullType = GPIO_PULL_UP;
+    gpio_init.drive=1;
+    gpio_init.smtCtrl=1;
+
+    gpio_init.gpioPin = 0;
+    GLB_GPIO_Init(&gpio_init);
+
+    gpio_init.gpioPin = 1;
+    GLB_GPIO_Init(&gpio_init);
+
+    gpio_init.gpioPin = 2;
+    GLB_GPIO_Init(&gpio_init);
+
+    gpio_init.gpioPin = 3;
+    GLB_GPIO_Init(&gpio_init);
+}
 
 void board_common_init(pinmux_setup_t *pinmux_setup, uint32_t len) {
     /* call to the init function in either bl808_d0.c or bl808_m0.c */
     bl808_cpu_init();
     board_common_setup_pinmux(pinmux_setup, len);
+    init_jtag_gpio();
 }
 
 

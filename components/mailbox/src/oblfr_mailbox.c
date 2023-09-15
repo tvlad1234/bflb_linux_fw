@@ -236,7 +236,8 @@ void IPC_M0_IRQHandler(int irq, void *arg)
     BL_WR_REG(IPC0_BASE, IPC_CPU0_IPC_ICR, irqStatus);
 }
 
-#ifdef CONFIG_COMPONENT_MAILBOX_IRQFWD_SDH
+/* #ifdef CONFIG_COMPONENT_MAILBOX_IRQFWD_SDH */
+#if 1
 oblfr_err_t setup_sdh_peripheral() {
     LOG_D("setting up SDH peripheral\r\n");
     struct bflb_device_s *gpio;
@@ -402,7 +403,8 @@ oblfr_err_t oblfr_mailbox_init()
         }
     }
 
-#ifdef CONFIG_COMPONENT_MAILBOX_IRQFWD_SDH
+/* #ifdef CONFIG_COMPONENT_MAILBOX_IRQFWD_SDH */
+#if 1
     if (setup_sdh_peripheral() != SUCCESS) {
         LOG_E("Failed to setup SDH peripheral\r\n");
         return OBLFR_ERR_ERROR;

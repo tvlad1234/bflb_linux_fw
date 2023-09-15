@@ -7,3 +7,7 @@ sdkconfig.old
 .config
 *.bin
 *.elf
+.cache
+.clangd
+cscope*
+compile_commands.*
