@@ -38,7 +38,12 @@ extern void unlz4(const void *aSource, void *aDestination, uint32_t FileLen);
 #define VM_LINUX_DST_ADDR 0x50000000
 #define OPENSBI_DST_ADDR 0x3EF80000
 #define DTB_DST_ADDR 0x51ff8000
-#define BOOT_HDR_SRC_ADDR (0x5d800000 - 8 * 1024 * 1024 + 256 * 1024)
+/*
+ * 0x5800,0000 - the start XIP address of D0,
+ * 0x40000 - the start address of bl808-firmware.bin in the flash.
+ * 0x21000 - the flash XIP offset of D0 processor.
+ */
+#define BOOT_HDR_SRC_ADDR (0x58000000 + 0x40000 - 0x21000)
 
 static struct bflb_device_s *uart0;
 
@@ -100,7 +105,7 @@ typedef enum {
     VM_BOOT_SECTION_HEADER = 0,
     VM_BOOT_SECTION_DTB,
     VM_BOOT_SECTION_OPENSBI,
-    VM_BOOT_SECTION_KERNEL,
+    VM_BOOT_SECTION_BOOTLOADER,
     VM_BOOT_SECTION_MAX,
 } vm_boot_section_t;
 
@@ -121,7 +126,7 @@ static char *sections[] = {
     "BootHeader",
     "dtb", 
     "OpenSBI", 
-    "Kernel", 
+    "Bootloader",
     "Unknown"
 };
 
@@ -185,8 +190,8 @@ void linux_load()
                 memcpy((void *)OPENSBI_DST_ADDR, (void *)(BOOT_HDR_SRC_ADDR + (uintptr_t)header->section[i].offset), header->section[i].size);
                 LOG_I("Done!\r\n");
                 break;
-            case VM_BOOT_SECTION_KERNEL:
-                LOG_I("Uncompressing Kernel to 0x%08x...\r\n", VM_LINUX_DST_ADDR);
+            case VM_BOOT_SECTION_BOOTLOADER:
+                LOG_I("Uncompressing Bootloader to 0x%08x...\r\n", VM_LINUX_DST_ADDR);
                 unlz4((const void *)(BOOT_HDR_SRC_ADDR + (uintptr_t)header->section[i].offset), (void *)VM_LINUX_DST_ADDR, header->section[i].size);
                 LOG_I("Done!\r\n");
                 break;
